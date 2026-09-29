@@ -35,5 +35,9 @@
   "allowScripts": {
     "@parcel/watcher@2.5.1": true,
     "esbuild": true
+  },
+  "devDependencies": {
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9"
   }
 }
