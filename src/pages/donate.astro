@@ -210,16 +210,17 @@ const defaultAmounts = [100, 500, 1000, 2500];
         return;
       }
 
-      const transactionRef = `VK${Date.now()}`;
+      if (!Number.isInteger(amount)) {
+        setStatus("Please enter a whole-number donation amount.", true);
+        return;
+      }
 
       const params = new URLSearchParams({
         pa: upiId,
         pn: payeeName,
-        mc: merchantCode,
-        tr: transactionRef,
         tn: "Donation to Vasudhaiva Kulam Trust",
         am: amount.toFixed(2),
-        cu: currency,
+        cu: "INR",
       });
 
       window.location.href = `upi://pay?${params.toString()}`;
