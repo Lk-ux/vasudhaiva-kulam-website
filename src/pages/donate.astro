@@ -39,10 +39,11 @@ const defaultAmounts = [100, 500, 1000, 2500];
         <div>
           <h2 class="text-2xl font-bold text-slate-900">Donate by UPI</h2>
           <p class="mt-2 text-slate-600">
-            Choose an amount, then tap the UPI payment button. On mobile, your
-            installed UPI app should open.
+            Tap the UPI payment button. On mobile, your installed UPI app should
+            open.
           </p>
 
+          <!--
           <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {
               defaultAmounts.map((amount) => (
@@ -74,6 +75,7 @@ const defaultAmounts = [100, 500, 1000, 2500];
               class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-4 text-lg outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-100"
             />
           </div>
+        -->
 
           <div class="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
@@ -150,10 +152,12 @@ const defaultAmounts = [100, 500, 1000, 2500];
   </main>
 
   <script define:vars={{ upiId, payeeName, merchantCode, currency }}>
+    /*
     const selectedAmount = { value: null };
 
     const amountButtons = document.querySelectorAll(".donation-amount");
     const customAmount = document.getElementById("custom-amount");
+    */
     const payButton = document.getElementById("pay-button");
     const copyButton = document.getElementById("copy-button");
     const status = document.getElementById("status");
@@ -165,6 +169,7 @@ const defaultAmounts = [100, 500, 1000, 2500];
         : "mt-4 min-h-6 text-sm font-semibold text-slate-600";
     }
 
+    /*
     function setSelectedAmount(amount) {
       selectedAmount.value = amount;
 
@@ -201,8 +206,10 @@ const defaultAmounts = [100, 500, 1000, 2500];
         button.classList.add("bg-white", "text-orange-700");
       });
     });
+    */
 
     payButton.addEventListener("click", () => {
+      /*
       const amount = Number(selectedAmount.value);
 
       if (!Number.isFinite(amount) || amount < 1) {
@@ -214,12 +221,12 @@ const defaultAmounts = [100, 500, 1000, 2500];
         setStatus("Please enter a whole-number donation amount.", true);
         return;
       }
+      */
 
       const params = new URLSearchParams({
         pa: upiId,
         pn: payeeName,
         tn: "Donation to Vasudhaiva Kulam Trust",
-        am: amount.toFixed(2),
         cu: "INR",
       });
 
