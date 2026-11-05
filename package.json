@@ -10,7 +10,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint \"src/**/*.astro\""
   },
   "repository": {
     "type": "git",
@@ -37,7 +38,10 @@
     "esbuild": true
   },
   "devDependencies": {
-    "eslint": "^10.11.0",
-    "prettier": "^3.9.9"
-  }
+    "eslint": "^10.14.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "prettier": "^3.9.9",
+    "typescript-eslint": "^8.72.1"
+  },
+  "overrides": {}
 }
