@@ -38,51 +38,7 @@ const defaultAmounts = [100, 500, 1000, 2500];
       <div class="grid gap-10 p-6 sm:p-10 lg:grid-cols-[1.1fr_.9fr]">
         <div>
           <h2 class="text-2xl font-bold text-slate-900">Donate by UPI</h2>
-          <p class="mt-2 text-slate-600">
-            Choose an amount, then tap the UPI payment button. On mobile, your
-            installed UPI app should open.
-          </p>
-
-          <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {
-              defaultAmounts.map((amount) => (
-                <button
-                  type="button"
-                  class="donation-amount rounded-2xl border border-orange-200 bg-white px-4 py-4 font-bold text-orange-700 transition hover:border-orange-500 hover:bg-orange-50"
-                  data-amount={amount}
-                >
-                  ₹{amount.toLocaleString("en-IN")}
-                </button>
-              ))
-            }
-          </div>
-
-          <div class="mt-6">
-            <label
-              for="custom-amount"
-              class="block text-sm font-semibold text-slate-700"
-            >
-              Custom amount (₹)
-            </label>
-            <input
-              id="custom-amount"
-              inputmode="decimal"
-              type="number"
-              min="1"
-              step="1"
-              placeholder="Enter amount"
-              class="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-4 text-lg outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-100"
-            />
-          </div>
-
           <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-            <button
-              id="pay-button"
-              type="button"
-              class="flex-1 rounded-2xl bg-orange-600 px-5 py-4 font-extrabold text-white shadow-lg transition hover:bg-orange-700"
-            >
-              Pay with UPI
-            </button>
             <button
               id="copy-button"
               type="button"
@@ -144,19 +100,116 @@ const defaultAmounts = [100, 500, 1000, 2500];
             Payee: {payeeName}<br />
             UPI: {upiId}
           </p>
+
+          <button
+            id="share-qr-button"
+            type="button"
+            class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 px-5 py-4 font-bold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200"
+          >
+            Share / Download QR
+          </button>
+
+          <p class="mt-2 text-xs leading-5 text-slate-500">
+            Share the QR directly or download it as an image to scan from your
+            gallery.
+          </p>
         </aside>
       </div>
     </section>
   </main>
 
   <script define:vars={{ upiId, payeeName, merchantCode, currency }}>
-    const selectedAmount = { value: null };
-
-    const amountButtons = document.querySelectorAll(".donation-amount");
-    const customAmount = document.getElementById("custom-amount");
-    const payButton = document.getElementById("pay-button");
     const copyButton = document.getElementById("copy-button");
     const status = document.getElementById("status");
+    const qrSvgUrl = "/vasudhaiva-kulam-upi-qr.svg";
+    const shareButton = document.getElementById("share-qr-button");
+
+    // Helper: Convert the SVG QR into a white-padded PNG File for UPI apps
+    async function getQrPngFile() {
+      const response = await fetch(qrSvgUrl);
+      const svgText = await response.text();
+      const svgBlob = new Blob([svgText], {
+        type: "image/svg+xml;charset=utf-8",
+      });
+      const url = URL.createObjectURL(svgBlob);
+
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const size = 1024;
+          const padding = 64; // White quiet zone required by UPI gallery scanners
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
+
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, size, size);
+          ctx.drawImage(
+            img,
+            padding,
+            padding,
+            size - padding * 2,
+            size - padding * 2,
+          );
+          URL.revokeObjectURL(url);
+
+          canvas.toBlob((blob) => {
+            if (!blob) return reject(new Error("Canvas toBlob failed"));
+            resolve(
+              new File([blob], "vasudhaiva-kulam-upi-qr.png", {
+                type: "image/png",
+              }),
+            );
+          }, "image/png");
+        };
+        img.onerror = reject;
+        img.src = url;
+      });
+    }
+
+    // Share or Download PNG QR (Best on mobile for donations <= ₹2,000)
+    async function shareOrDownloadQr() {
+      try {
+        const pngFile = await getQrPngFile();
+
+        if (navigator.share && navigator.canShare?.({ files: [pngFile] })) {
+          await navigator.share({
+            title: `Donate to ${payeeName}`,
+            text: `Scan this QR to donate to ${payeeName}, or pay using UPI ID: ${upiId}`,
+            files: [pngFile],
+          });
+
+          setStatus("QR shared successfully.");
+          return;
+        }
+
+        // Fallback: download the QR as a PNG
+        const downloadUrl = URL.createObjectURL(pngFile);
+        const a = document.createElement("a");
+
+        a.href = downloadUrl;
+        a.download = pngFile.name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        // Allow the browser to begin the download before revoking the URL
+        window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+
+        setStatus("QR downloaded. You can now upload it from your gallery.");
+      } catch (err) {
+        if (err?.name === "AbortError") {
+          setStatus("Sharing cancelled.");
+        } else {
+          console.error("Failed to share/download QR:", err);
+          setStatus(
+            "Unable to share or download the QR. Please try again.",
+            true,
+          );
+        }
+      }
+    }
 
     function setStatus(message, error = false) {
       status.textContent = message;
@@ -165,64 +218,14 @@ const defaultAmounts = [100, 500, 1000, 2500];
         : "mt-4 min-h-6 text-sm font-semibold text-slate-600";
     }
 
-    function setSelectedAmount(amount) {
-      selectedAmount.value = amount;
+    shareButton?.addEventListener("click", async () => {
+      shareButton.disabled = true;
 
-      amountButtons.forEach((button) => {
-        const active = Number(button.dataset.amount) === amount;
-        button.classList.toggle("bg-orange-600", active);
-        button.classList.toggle("text-white", active);
-        button.classList.toggle("border-orange-600", active);
-        button.classList.toggle("bg-white", !active);
-        button.classList.toggle("text-orange-700", !active);
-      });
-
-      customAmount.value = "";
-      setStatus(`Donation amount selected: ₹${amount.toLocaleString("en-IN")}`);
-    }
-
-    amountButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        setSelectedAmount(Number(button.dataset.amount));
-      });
-    });
-
-    customAmount.addEventListener("input", () => {
-      const amount = Number(customAmount.value);
-      selectedAmount.value =
-        Number.isFinite(amount) && amount >= 1 ? amount : null;
-
-      amountButtons.forEach((button) => {
-        button.classList.remove(
-          "bg-orange-600",
-          "text-white",
-          "border-orange-600",
-        );
-        button.classList.add("bg-white", "text-orange-700");
-      });
-    });
-
-    payButton.addEventListener("click", () => {
-      const amount = Number(selectedAmount.value);
-
-      if (!Number.isFinite(amount) || amount < 1) {
-        setStatus("Please select or enter a donation amount first.", true);
-        return;
+      try {
+        await shareOrDownloadQr();
+      } finally {
+        shareButton.disabled = false;
       }
-
-      const transactionRef = `VK${Date.now()}`;
-
-      const params = new URLSearchParams({
-        pa: upiId,
-        pn: payeeName,
-        mc: merchantCode,
-        tr: transactionRef,
-        tn: "Donation to Vasudhaiva Kulam Trust",
-        am: amount.toFixed(2),
-        cu: currency,
-      });
-
-      window.location.href = `upi://pay?${params.toString()}`;
     });
 
     copyButton.addEventListener("click", async () => {
