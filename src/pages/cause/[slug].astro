@@ -1,5 +1,6 @@
 ---
 import { causes } from "../../data/causes";
+import ActivityCard from "../../components/ActivityCard.astro";
 import "../../styles/cause-pages.css";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -10,16 +11,39 @@ export function getStaticPaths() {
   }));
 }
 
+interface CompletedActivity {
+  title: string;
+  hindiTitle?: string;
+  /** ISO date in YYYY-MM-DD format. */
+  date: string;
+  location?: string;
+  summary: string;
+  imageSrc: string;
+  imageAlt: string;
+  outcomes?: { value: string; label: string }[];
+  galleryHref?: string;
+}
+
+// Add only verified, completed events. Place event photos in
+// public/images/activities/ and reference them with paths such as
+// /images/activities/education-workshop.jpg.
+const completedActivitiesByCause: Record<string, CompletedActivity[]> = {
+  education: [],
+  health: [],
+  "community-welfare": [],
+  environment: [],
+};
+
 const { cause } = Astro.props;
-const siteName = "Vasudhaiva Kulam";
+const completedActivities = completedActivitiesByCause[cause.slug] ?? [];
 ---
 
-<BaseLayout title="Home - Vasudhaiva Kulam">
+<BaseLayout title={cause.name + " - Vasudhaiva Kulam"}>
   <main>
     <section class="hero">
       <div
         class="hero-image"
-        style={`background-image:url('${cause.heroImage}')`}
+        style={"background-image:url('" + cause.heroImage + "')"}
         aria-hidden="true"
       >
       </div>
@@ -54,11 +78,9 @@ const siteName = "Vasudhaiva Kulam";
 
         <div class="focus-grid">
           {
-            cause.focus.map((item) => (
+            cause.focus.map((item, index) => (
               <article class="focus-card">
-                <span class="card-number">
-                  0{cause.focus.indexOf(item) + 1}
-                </span>
+                <span class="card-number">0{index + 1}</span>
                 <h3>{item.label}</h3>
                 <p class="card-hindi">{item.hindi}</p>
                 <p>{item.copy}</p>
@@ -75,9 +97,8 @@ const siteName = "Vasudhaiva Kulam";
           <span class="section-kicker">OUR WORK</span>
           <h2>Ways we turn the idea into action.</h2>
           <p>
-            Use authentic programme photography and replace this copy with live
-            project updates, locations, and verified outcomes as the cause
-            grows.
+            Explore the programmes that make this cause possible. Completed
+            events and their outcomes are documented separately below.
           </p>
         </div>
 
@@ -100,6 +121,38 @@ const siteName = "Vasudhaiva Kulam";
         </div>
       </div>
     </section>
+
+    {
+      completedActivities.length > 0 && (
+        <section
+          id="completed-activities"
+          class="section section-white section-activities"
+          aria-labelledby="completed-activities-title"
+        >
+          <div class="container">
+            <div class="section-heading">
+              <div>
+                <span class="section-kicker">COMPLETED ACTIVITIES</span>
+                <h2 id="completed-activities-title">
+                  Our work, out in the community.
+                </h2>
+              </div>
+              <p>
+                A look back at the people, partnerships, and practical work
+                behind this cause. Each update includes the event details and
+                outcomes we can verify.
+              </p>
+            </div>
+
+            <div class="activity-grid">
+              {completedActivities.map((activity) => (
+                <ActivityCard {...activity} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
 
     <section id="act" class="section section-white">
       <div class="container">
