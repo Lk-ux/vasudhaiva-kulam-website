@@ -4,6 +4,19 @@ import blanketImage from "../assets/blanket.jpeg";
 import teamImage from "../assets/us.jpeg";
 import plantImage from "../assets/plant.jpeg";
 
+export type CompletedActivity = {
+  title: string;
+  hindiTitle?: string;
+  /** ISO date in YYYY-MM-DD format. */
+  date: string;
+  location?: string;
+  summary: string;
+  imageSrc: string;
+  imageAlt: string;
+  outcomes?: { value: string; label: string }[];
+  galleryHref?: string;
+};
+
 export type Cause = {
   slug: string;
   icon: string;
@@ -18,6 +31,7 @@ export type Cause = {
   focus: { label: string; hindi: string; copy: string }[];
   programs: { title: string; hindi: string; copy: string; action: string; url: string }[];
   ways: { title: string; copy: string }[];
+  completedActivities: CompletedActivity[];
   ctaTitle: string;
   ctaCopy: string;
 };
@@ -25,6 +39,7 @@ export type Cause = {
 export const causes: Cause[] = [
   {
     slug: 'education',
+    completedActivities: [],
     icon: 'school',
     eyebrow: 'EDUCATION / शिक्षा',
     name: 'Education',
@@ -53,6 +68,7 @@ export const causes: Cause[] = [
   },
   {
     slug: 'health',
+    completedActivities: [],
     icon: 'medical_services',
     eyebrow: 'HEALTH / स्वास्थ्य',
     name: 'Health',
@@ -81,6 +97,7 @@ export const causes: Cause[] = [
   },
   {
     slug: 'community-welfare',
+    completedActivities: [],
     icon: 'groups',
     eyebrow: 'COMMUNITY WELFARE / जन कल्याण',
     name: 'Community Welfare',
@@ -109,6 +126,7 @@ export const causes: Cause[] = [
   },
   {
     slug: 'environment',
+    completedActivities: [],
     icon: 'eco',
     eyebrow: 'ENVIRONMENT / पर्यावरण',
     name: 'Environment',
