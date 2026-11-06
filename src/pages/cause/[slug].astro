@@ -12,56 +12,82 @@ export function getStaticPaths() {
 
 const { cause } = Astro.props;
 const siteName = "Vasudhaiva Kulam";
+const pageTitle = `${cause.name} - ${siteName}`;
+const activityCount = cause.completed.length + cause.upcoming.length;
 ---
 
-<BaseLayout title="Home - Vasudhaiva Kulam">
-  <main>
-    <section class="hero">
-      <div
-        class="hero-image"
-        style={`background-image:url('${cause.heroImage}')`}
-        aria-hidden="true"
-      >
-      </div>
-      <div class="hero-overlay"></div>
-      <div class="container hero-content">
-        <a class="back-link" href="/cause/">← All causes</a>
-        <span class="eyebrow">{cause.eyebrow}</span>
-        <div class="hero-copy">
-          <h1>{cause.title}</h1>
-          <p class="hindi-title">{cause.titleHindi}</p>
-          <p class="hero-intro">{cause.intro}</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#act">Take action</a>
-            <a class="btn btn-ghost" href="#impact">See our focus</a>
+<BaseLayout title={pageTitle}>
+  <main class={`cause-page cause-${cause.accent}`}>
+    <!-- HERO -->
+    <section class="cause-hero">
+      <div class="cause-hero-inner">
+        <a class="cause-back" href="/cause/">← All causes</a>
+
+        <div class="cause-hero-grid">
+          <div class="cause-hero-copy">
+            <p class="cause-eyebrow">{cause.eyebrow}</p>
+
+            <h1>{cause.title}</h1>
+
+            <p class="cause-title-hindi">
+              {cause.titleHindi}
+            </p>
+
+            <p class="cause-intro">
+              {cause.intro}
+            </p>
+
+            <div class="cause-actions">
+              <a class="cause-button cause-button-primary" href="#activities">
+                See activities
+              </a>
+
+              <a class="cause-button cause-button-secondary" href="/join/">
+                Volunteer
+              </a>
+            </div>
           </div>
+
+          <figure class="cause-hero-media">
+            <img
+              src={cause.heroImage}
+              alt={`${cause.name} activity`}
+              loading="eager"
+            />
+          </figure>
         </div>
       </div>
     </section>
 
-    <section id="impact" class="section section-white">
-      <div class="container">
-        <div class="section-heading">
+    <!-- FOCUS -->
+    <section class="cause-section cause-section-white">
+      <div class="cause-container">
+        <div class="cause-section-header">
           <div>
-            <span class="section-kicker">WHY IT MATTERS</span>
-            <h2>A focused cause, built around people.</h2>
+            <p class="cause-kicker">OUR FOCUS</p>
+            <h2>What we work on.</h2>
           </div>
-          <p>
-            Every cause page follows the same rhythm: explain the need, show how
-            the work happens, then make the next step clear.
+
+          <p class="cause-section-note">
+            A few practical areas where this cause takes shape.
           </p>
         </div>
 
-        <div class="focus-grid">
+        <div class="focus-list">
           {
-            cause.focus.map((item) => (
-              <article class="focus-card">
-                <span class="card-number">
-                  0{cause.focus.indexOf(item) + 1}
+            cause.focus.map((item, index) => (
+              <article class="focus-item">
+                <span class="focus-index">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
-                <h3>{item.label}</h3>
-                <p class="card-hindi">{item.hindi}</p>
-                <p>{item.copy}</p>
+
+                <div>
+                  <h3>{item.label}</h3>
+
+                  <p class="focus-hindi">{item.hindi}</p>
+
+                  <p>{item.copy}</p>
+                </div>
               </article>
             ))
           }
@@ -69,80 +95,180 @@ const siteName = "Vasudhaiva Kulam";
       </div>
     </section>
 
-    <section class="section section-tint">
-      <div class="container program-layout">
-        <div class="section-heading section-heading-stacked">
-          <span class="section-kicker">OUR WORK</span>
-          <h2>Ways we turn the idea into action.</h2>
-          <p>
-            Use authentic programme photography and replace this copy with live
-            project updates, locations, and verified outcomes as the cause
-            grows.
+    <!-- ACTIVITIES -->
+    <section id="activities" class="cause-section cause-section-tint">
+      <div class="cause-container">
+        <div class="cause-section-header">
+          <div>
+            <p class="cause-kicker">ACTIVITY LOG</p>
+            <h2>What we've done. What's next.</h2>
+          </div>
+
+          <p class="cause-section-note">
+            {
+              activityCount > 0
+                ? `${activityCount} published activit${
+                    activityCount === 1 ? "y" : "ies"
+                  }.`
+                : "Activities are added once their details are confirmed."
+            }
           </p>
         </div>
 
-        <div class="program-stack">
-          {
-            cause.programs.map((program) => (
-              <article class="program-card">
-                <div>
-                  <span class="program-label">PROGRAMME</span>
-                  <h3>{program.title}</h3>
-                  <p class="card-hindi">{program.hindi}</p>
-                  <p>{program.copy}</p>
+        <div class="activity-columns">
+          <!-- COMPLETED -->
+          <section class="activity-group" aria-labelledby="completed-heading">
+            <div class="activity-heading">
+              <div>
+                <span class="activity-status activity-status-complete">
+                  Completed
+                </span>
+              </div>
+
+              <span>{cause.completed.length} published</span>
+            </div>
+
+            {
+              cause.completed.length > 0 ? (
+                <div class="activity-list">
+                  {cause.completed.map((activity) => (
+                    <article class="activity-card">
+                      <time class="activity-date">{activity.date}</time>
+
+                      <div class="activity-body">
+                        <h3>{activity.title}</h3>
+
+                        {activity.location && (
+                          <p class="activity-location">{activity.location}</p>
+                        )}
+
+                        <p>{activity.summary}</p>
+
+                        {activity.href && (
+                          <a href={activity.href}>Read more →</a>
+                        )}
+                      </div>
+                    </article>
+                  ))}
                 </div>
-                <a class="text-link" href={program.url}>
-                  {program.action} <span>→</span>
-                </a>
-              </article>
-            ))
-          }
+              ) : (
+                <div class="activity-empty">
+                  <strong>No completed activities yet.</strong>
+
+                  <p>
+                    Completed activities will appear here after they take place
+                    and the details are ready to publish.
+                  </p>
+                </div>
+              )
+            }
+          </section>
+
+          <!-- UPCOMING -->
+          <section class="activity-group" aria-labelledby="upcoming-heading">
+            <div class="activity-heading">
+              <div>
+                <span class="activity-status activity-status-upcoming">
+                  Upcoming
+                </span>
+              </div>
+
+              <span>{cause.upcoming.length} announced</span>
+            </div>
+
+            {
+              cause.upcoming.length > 0 ? (
+                <div class="activity-list">
+                  {cause.upcoming.map((activity) => (
+                    <article class="activity-card">
+                      <time class="activity-date">{activity.date}</time>
+
+                      <div class="activity-body">
+                        <h3>{activity.title}</h3>
+
+                        {activity.location && (
+                          <p class="activity-location">{activity.location}</p>
+                        )}
+
+                        <p>{activity.summary}</p>
+
+                        {activity.href && <a href={activity.href}>Join →</a>}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div class="activity-empty">
+                  <strong>No upcoming activity announced.</strong>
+
+                  <p>
+                    We publish upcoming activities here once the date, location,
+                    and basic details are confirmed.
+                  </p>
+
+                  <a href="/join/">Join the volunteer list →</a>
+                </div>
+              )
+            }
+          </section>
         </div>
       </div>
     </section>
 
-    <section id="act" class="section section-white">
-      <div class="container">
-        <div class="section-heading">
+    <!-- WAYS TO HELP -->
+    <section class="cause-section cause-section-white">
+      <div class="cause-container">
+        <div class="cause-section-header">
           <div>
-            <span class="section-kicker">GET INVOLVED</span>
-            <h2>Choose your way to contribute.</h2>
+            <p class="cause-kicker">HOW TO HELP</p>
+            <h2>Choose one useful thing.</h2>
           </div>
-          <p>
-            Keep contribution paths specific so visitors can act without
-            guessing what their support will do.
+
+          <p class="cause-section-note">
+            You don't need to do everything. Start with the kind of help that
+            works for you.
           </p>
         </div>
 
         <div class="ways-grid">
           {
             cause.ways.map((way) => (
-              <article class="way-card">
-                <span class="way-dot" />
-                <h3>{way.title}</h3>
-                <p>{way.copy}</p>
-              </article>
+              <a class="way-item" href={way.href}>
+                <div>
+                  <h3>{way.title}</h3>
+                  <p>{way.copy}</p>
+                </div>
+
+                <span aria-hidden="true">→</span>
+              </a>
             ))
           }
         </div>
       </div>
     </section>
 
-    <section class="cta-wrap">
-      <div class="container">
-        <div class="cta-card">
+    <!-- CTA -->
+    <section class="cause-cta">
+      <div class="cause-container">
+        <div class="cause-cta-inner">
           <div>
-            <span class="section-kicker"
-              >{cause.name.toUpperCase()} / {cause.hindi}</span
-            >
+            <p class="cause-kicker">
+              {cause.name.toUpperCase()} / {cause.hindi}
+            </p>
+
             <h2>{cause.ctaTitle}</h2>
+
             <p>{cause.ctaCopy}</p>
           </div>
-          <div class="cta-actions">
-            <a class="btn btn-primary" href="/donate/"
-              >Donate <span>(दान करें)</span></a
-            >
-            <a class="btn btn-light" href="/join/">Volunteer</a>
+
+          <div class="cause-cta-actions">
+            <a class="cause-button cause-button-primary" href="/join/">
+              Volunteer
+            </a>
+
+            <a class="cause-button cause-button-light" href="/donate/">
+              Donate
+            </a>
           </div>
         </div>
       </div>
