@@ -11,31 +11,9 @@ export function getStaticPaths() {
   }));
 }
 
-interface CompletedActivity {
-  title: string;
-  hindiTitle?: string;
-  /** ISO date in YYYY-MM-DD format. */
-  date: string;
-  location?: string;
-  summary: string;
-  imageSrc: string;
-  imageAlt: string;
-  outcomes?: { value: string; label: string }[];
-  galleryHref?: string;
-}
-
-// Add only verified, completed events. Place event photos in
-// public/images/activities/ and reference them with paths such as
-// /images/activities/education-workshop.jpg.
-const completedActivitiesByCause: Record<string, CompletedActivity[]> = {
-  education: [],
-  health: [],
-  "community-welfare": [],
-  environment: [],
-};
-
 const { cause } = Astro.props;
-const completedActivities = completedActivitiesByCause[cause.slug] ?? [];
+const completedActivities = cause.completedActivities ?? [];
+
 ---
 
 <BaseLayout title={cause.name + " - Vasudhaiva Kulam"}>
