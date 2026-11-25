@@ -132,16 +132,16 @@ const siteName = "Vasudhaiva Kulam";
       <div class="container">
         <div class="cta-card">
           <div>
-            <span class="section-kicker"
-              >{cause.name.toUpperCase()} / {cause.hindi}</span
-            >
+            <span class="section-kicker">
+            {cause.hindi
+              ? `${cause.name.toUpperCase()} / ${cause.hindi}`
+              : cause.name.toUpperCase()}
+          </span>
             <h2>{cause.ctaTitle}</h2>
             <p>{cause.ctaCopy}</p>
           </div>
           <div class="cta-actions">
-            <a class="btn btn-primary" href="/donate/"
-              >Donate <span>(दान करें)</span></a
-            >
+            <a class="btn btn-primary" href="/donate/">Donate</a>
             <a class="btn btn-light" href="/join/">Volunteer</a>
           </div>
         </div>

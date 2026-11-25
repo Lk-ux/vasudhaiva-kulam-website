@@ -1,7 +1,7 @@
 ---
 interface Props {
   title: string;
-  hindiTitle: string;
+  hindiTitle?: string;
   description: string;
   imageSrc: string;
   imageAlt: string;
@@ -47,7 +47,7 @@ const {
 
   <div class="p-6 grow flex flex-col">
     <h3 class="font-display text-title-sm font-semibold text-on-surface mb-2">
-      {title} ({hindiTitle})
+      {title}{hindiTitle && <> ({hindiTitle})</>}
     </h3>
 
     <p class="font-sans text-body-md text-on-surface-variant mb-6 grow">
