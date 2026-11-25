@@ -9,7 +9,7 @@ export type Cause = {
   icon: string;
   eyebrow: string;
   name: string;
-  hindi?: string;
+  hindi: string;
   title: string;
   titleHindi: string;
   intro: string;
@@ -26,8 +26,9 @@ export const causes: Cause[] = [
   {
     slug: 'education',
     icon: 'school',
-    eyebrow: 'EDUCATION',
+    eyebrow: 'EDUCATION / शिक्षा',
     name: 'Education',
+    hindi: 'शिक्षा',
     title: 'Open the door to opportunity.',
     titleHindi: 'अवसरों के द्वार खोलें।',
     intro: 'Quality learning becomes more powerful when a child also has the resources, guidance, and encouragement to keep going. Our education work focuses on practical support and long-term mentorship for underprivileged youth.',
@@ -53,8 +54,9 @@ export const causes: Cause[] = [
   {
     slug: 'health',
     icon: 'medical_services',
-    eyebrow: 'HEALTH',
+    eyebrow: 'HEALTH / स्वास्थ्य',
     name: 'Health',
+    hindi: 'स्वास्थ्य',
     title: 'Make essential care easier to reach.',
     titleHindi: 'ज़रूरी स्वास्थ्य सेवा को सुलभ बनाएं।',
     intro: 'Health support begins with reliable community action. Our health initiative centres on periodic blood donation drives and practical support that can connect local communities with urgent needs.',
@@ -108,8 +110,9 @@ export const causes: Cause[] = [
   {
     slug: 'environment',
     icon: 'eco',
-    eyebrow: 'ENVIRONMENT',
+    eyebrow: 'ENVIRONMENT / पर्यावरण',
     name: 'Environment',
+    hindi: 'पर्यावरण',
     title: 'Care for the places we all call home.',
     titleHindi: 'उन स्थानों की रक्षा करें जिन्हें हम सब घर कहते हैं।',
     intro: 'Environmental stewardship is community work. Our focus brings people together around sustainable living, afforestation, and water conservation so local action can strengthen the places we share.',

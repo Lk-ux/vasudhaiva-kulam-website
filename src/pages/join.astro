@@ -31,7 +31,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <h2
             class="font-display text-headline-md md:font-display md:text-headline-md text-on-surface"
           >
-            Volunteer With Us
+            Volunteer With Us <br /><span
+              class="text-lg font-normal text-on-surface-variant"
+              >स्वयंसेवक बनें</span
+            >
           </h2>
         </div>
         <form
@@ -41,22 +44,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label for="vol-name">Full Name</label>
+              <label for="vol-name">Full Name (पूरा नाम)</label>
               <input
                 class="input-minimal w-full font-sans text-body-md text-on-surface"
                 id="vol-name"
-                placeholder="Full Name"
+                placeholder="Full Name (पूरा नाम)"
                 required=""
                 type="text"
                 name="name"
               />
             </div>
             <div>
-              <label for="vol-email">Email Address</label>
+              <label for="vol-email">Email Address (ईमेल)</label>
               <input
                 class="input-minimal w-full font-sans text-body-md text-on-surface"
                 id="vol-email"
-                placeholder="Email Address"
+                placeholder="Email Address (ईमेल)"
                 required=""
                 type="email"
                 name="email"
@@ -67,7 +70,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <p
               class="font-sans text-label-caps font-semibold uppercase tracking-wider text-on-surface-variant mb-4"
             >
-              Areas of Interest
+              Areas of Interest (रुचि के क्षेत्र)
             </p>
             <div class="flex flex-wrap gap-3">
               <div>

@@ -6,7 +6,7 @@ export interface Props {
   categoryName: string;
   badgeTextClass?: string;
   title: string;
-  subtitle?: string;
+  subtitle: string;
   description: string;
   progressCurrent: string;
   progressGoal: string;
@@ -65,14 +65,10 @@ const {
   <div class="p-6 flex flex-col grow gap-4">
     <h3 class="font-display text-title-sm font-semibold text-on-tertiary-fixed">
       {title}
-      {subtitle && (
-        <>
-          <br />
-          <span class="text-on-surface-variant text-[16px] font-normal">
-            {subtitle}
-          </span>
-        </>
-      )}
+      <br />
+      <span class="text-on-surface-variant text-[16px] font-normal"
+        >{subtitle}</span
+      >
     </h3>
 
     <p class="font-sans text-body-md text-on-surface-variant line-clamp-3">
