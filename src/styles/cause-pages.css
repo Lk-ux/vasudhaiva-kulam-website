@@ -1,3 +1,7 @@
+.cause-page {
+  line-height: 1.6;
+}
+
 .cause-page .container {
   width: min(
     var(--spacing-container-max),
