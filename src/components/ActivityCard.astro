@@ -1,0 +1,94 @@
+---
+interface OutcomeMetric {
+  value: string;
+  label: string;
+}
+
+export interface Props {
+  title: string;
+  hindiTitle?: string;
+  /** ISO date in YYYY-MM-DD format. */
+  date: string;
+  location?: string;
+  summary: string;
+  imageSrc: string;
+  imageAlt: string;
+  outcomes?: OutcomeMetric[];
+  galleryHref?: string;
+}
+
+const {
+  title,
+  hindiTitle,
+  date,
+  location,
+  summary,
+  imageSrc,
+  imageAlt,
+  outcomes = [],
+  galleryHref,
+} = Astro.props;
+
+const parsedDate = new Date(date + "T00:00:00Z");
+const formattedDate = Number.isNaN(parsedDate.getTime())
+  ? date
+  : new Intl.DateTimeFormat("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(parsedDate);
+---
+
+<article class="activity-card">
+  <div class="activity-card__media">
+    <img
+      class="activity-card__image"
+      src={imageSrc}
+      alt={imageAlt}
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="activity-card__status">
+      <span class="activity-card__status-mark" aria-hidden="true">✓</span>
+      Completed
+    </span>
+  </div>
+
+  <div class="activity-card__content">
+    <div class="activity-card__meta">
+      <time datetime={date}>{formattedDate}</time>
+      {location && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span>{location}</span>
+        </>
+      )}
+    </div>
+
+    <h3 class="activity-card__title">{title}</h3>
+
+    {hindiTitle && <p class="activity-card__hindi">{hindiTitle}</p>}
+
+    <p class="activity-card__summary">{summary}</p>
+
+    {
+      outcomes.length > 0 && (
+        <dl class="activity-card__outcomes">
+          {outcomes.map((outcome) => (
+            <div class="activity-card__outcome">
+              <dd>{outcome.value}</dd>
+              <dt>{outcome.label}</dt>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    {galleryHref && (
+      <a class="activity-card__link" href={galleryHref}>
+        View activity photos <span aria-hidden="true">→</span>
+      </a>
+    )}
+  </div>
+</article>
