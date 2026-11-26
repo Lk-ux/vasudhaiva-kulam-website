@@ -1,12 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Pillar from "../components/Pillar.astro";
-import classImage from "../assets/class.jpeg";
-import bloodDonationImage from "../assets/blood-donation.jpeg";
-import blanketImage from "../assets/blanket.jpeg";
 import teamImage from "../assets/us.jpeg";
-import plantImage from "../assets/plant.jpeg";
 import { stats } from "../data/stats";
+import { causes } from "../data/causes";
 ---
 
 <BaseLayout title="Home - Vasudhaiva Kulam">
@@ -19,7 +16,7 @@ import { stats } from "../data/stats";
       <div
         class="absolute inset-0 z-0 bg-cover bg-center"
         data-alt="Our team"
-        style={`background-image: url(${teamImage.src})`}
+        style={\`background-image: url(\${teamImage.src})\`}
       >
         <!-- Gradient Overlay for readability -->
         <div
@@ -130,7 +127,7 @@ import { stats } from "../data/stats";
         }
       </div>
     </section>
-    <!-- Pillars Grid (3-column) -->
+    <!-- Core Initiatives -->
     <section
       class="py-section-gap px-gutter max-w-container-max mx-auto"
       id="causes"
@@ -149,50 +146,21 @@ import { stats } from "../data/stats";
         </p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <Pillar
-          title="Education"
-          description="Providing quality education, resources, and mentorship to underprivileged youth to break the cycle of poverty."
-          imageSrc={classImage.src}
-          imageAlt="A volunteer teaching underprivileged kids"
-          category="Education"
-          icon="auto_stories"
-          iconColor="text-tertiary"
-          href="cause/education"
-        />
-
-        <Pillar
-          title="Health"
-          description="Ensuring access to basic healthcare by conducting periodic blood donation drives."
-          imageSrc={bloodDonationImage.src}
-          imageAlt="A volunteer donating blood"
-          category="Health"
-          icon="medical_services"
-          iconColor="text-primary-container"
-          href="cause/health"
-        />
-
-        <Pillar
-          title="Community Welfare"
-          hindiTitle="जन कल्याण"
-          description="Providing access to basic facilities by distributing blankets, food, lights, etc."
-          imageSrc={blanketImage.src}
-          imageAlt="Volunteer giving a blanket to an old man"
-          category="Community Welfare"
-          icon="groups"
-          iconColor="text-secondary"
-          href="cause/community-welfare"
-        />
-
-        <Pillar
-          title="Environment"
-          description="Conducting periodic afforestation drives."
-          imageSrc={plantImage.src}
-          imageAlt="A tree plantation drive"
-          category="Environment"
-          icon="eco"
-          iconColor="text-tertiary"
-          href="cause/environment"
-        />
+        {
+          causes.map((cause) => (
+            <Pillar
+              title={cause.name}
+              hindiTitle={cause.hindi}
+              description={cause.summary}
+              imageSrc={cause.heroImage}
+              imageAlt={cause.imageAlt}
+              category={cause.name}
+              icon={cause.icon}
+              iconColor={cause.iconColor}
+              href={"/cause/" + cause.slug + "/"}
+            />
+          ))
+        }
       </div>
     </section>
   </main>
