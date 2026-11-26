@@ -99,6 +99,7 @@ import { causes } from "../data/causes";
             cause.title,
             cause.titleHindi,
             cause.intro,
+            cause.summary,
             ...cause.focus.flatMap((item) => [item.label, item.hindi, item.copy]),
             ...cause.programs.flatMap((program) => [
               program.title,
