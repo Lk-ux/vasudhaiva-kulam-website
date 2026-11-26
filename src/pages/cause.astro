@@ -47,7 +47,7 @@ import { causes } from "../data/causes";
       >
         <button
           type="button"
-          class="cause-filter px-5 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-primary bg-primary-container text-on-primary shadow-sm transition-all"
+          class="cause-filter px-5 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-primary bg-primary-container text-on-primary shadow-sm transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           data-category="all"
           aria-pressed="true"
           aria-controls="causes-grid"
@@ -58,7 +58,7 @@ import { causes } from "../data/causes";
           causes.map((cause) => (
             <button
               type="button"
-              class="cause-filter px-5 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-outline-variant bg-surface-container-lowest text-on-surface-variant transition-all"
+              class="cause-filter px-5 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-outline-variant bg-surface-container-lowest text-on-surface-variant transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               data-category={cause.slug}
               aria-pressed="false"
               aria-controls="causes-grid"
