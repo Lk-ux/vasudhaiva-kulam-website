@@ -1,144 +1,290 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import CampaignCard from "../components/CampaignCard.astro";
-import classImage from "../assets/class.jpeg";
-import bloodDonation from "../assets/blood-donation.jpeg";
-import plantImage from "../assets/plant.jpeg";
+import { causes } from "../data/causes";
 ---
 
 <BaseLayout title="Causes - Vasudhaiva Kulam">
   <main
     class="grow flex flex-col w-full max-w-container-max mx-auto px-margin-mobile md:px-gutter py-margin-desktop md:py-section-gap gap-12"
   >
-    <!-- Page Header & Search -->
     <section class="flex flex-col gap-6 text-center max-w-3xl mx-auto w-full">
-      <h1 class="font-display text-display-lg md:text-display-lg text-primary">
-        Our Causes <br /><span
-          class="text-on-surface-variant text-3xl md:text-4xl"
-          >(कार्य और परियोजनाएं)</span
-        >
+      <h1 class="font-display text-display-lg text-primary">
+        Our Causes <br />
+        <span class="text-on-surface-variant text-3xl md:text-4xl">
+          (कार्य और परियोजनाएं)
+        </span>
       </h1>
       <p class="font-sans text-body-lg text-on-surface-variant">
-        Join us in making a difference. Explore our ongoing projects across
-        education, community welfare, and environmental sustainability.
+        Explore our four initiatives and find a practical way to support the work
+        that matters to you.
       </p>
+
       <div class="relative w-full max-w-xl mx-auto mt-4">
+        <label for="cause-search" class="sr-only">Search initiatives</label>
         <span
+          aria-hidden="true"
           class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant"
-          >search</span
-        >
+        >search</span>
         <input
+          id="cause-search"
           class="w-full pl-12 pr-4 py-4 rounded-full border border-outline-variant bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-sans text-body-md text-on-surface placeholder-on-surface-variant transition-all shadow-sm"
-          placeholder="Search projects..."
-          type="text"
+          placeholder="Search initiatives, programmes, or focus areas..."
+          type="search"
+          autocomplete="off"
+          aria-controls="causes-grid"
         />
       </div>
     </section>
 
-    <!-- Filters/Tabs -->
-    <section class="flex flex-wrap justify-center gap-4 w-full">
-      <button
-        class="px-6 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-primary bg-primary-container text-on-primary shadow-sm hover:shadow-md transition-all"
-        >All</button
-      >
-      <button
-        class="px-6 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:border-primary hover:text-primary transition-all"
-        >Education</button
-      >
-      <button
-        class="px-6 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:border-primary hover:text-primary transition-all"
-        >Welfare (कल्याण)</button
-      >
-      <button
-        class="px-6 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:border-primary hover:text-primary transition-all"
-        >Environment</button
-      >
-    </section>
-
-    <!-- Bento Grid of Campaign Cards -->
     <section
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
+      class="flex flex-col items-center gap-4 w-full"
+      aria-label="Initiative filters"
     >
-      <!-- Card 1: Education -->
-      <CampaignCard
-        cardClass="glass-card"
-        cardStyle=""
-        imageSrc={classImage.src}
-        imageAlt="An open classroom in an Indian slum."
-        categoryIcon="school"
-        categoryName="Education"
-        badgeTextClass="text-tertiary"
-        title="Sponsor a Child's Education"
-        subtitle="(एक बच्चे की शिक्षा प्रायोजित करें)"
-        description="Provide essential school supplies, tutoring, and support to underprivileged children, ensuring they have the tools to succeed."
-        progressCurrent="₹5,000 Raised"
-        progressGoal="Goal: ₹10,000"
-        progressPercentage={50}
-        buttonText="Donate Now"
-        href="/donate"
-      />
-
-      <!-- Card 2: Environment -->
-      <CampaignCard
-        imageSrc={plantImage.src}
-        imageAlt="Volunteers during a plantation drive."
-        categoryIcon="park"
-        categoryName="Environment"
-        badgeTextClass="text-secondary"
-        title="Green Earth Plantation Drive"
-        subtitle="(हरित पृथ्वी वृक्षारोपण अभियान)"
-        description="Join our initiative to plant 10,000 trees this year. Help us restore local ecosystems and combat climate change through community action."
-        progressCurrent="11 Trees"
-        progressGoal="Goal: 100"
-        progressPercentage={11}
-        buttonText="Join Drive"
-        href="/join"
-      />
-
-      <!-- Card 3: Welfare -->
-      <CampaignCard
-        imageSrc={bloodDonation.src}
-        imageAlt="Volunteer donationg blood."
-        categoryIcon="bloodtype"
-        categoryName="Welfare"
-        badgeTextClass="text-error"
-        title="Blood Donation"
-        description="Save lives by participating in our community blood donation initiatives. Safe, hygienic, and crucial for local hospitals."
-        progressCurrent="29 Donors"
-        progressGoal="Goal: 50"
-        progressPercentage={58}
-        buttonText="Register"
-        href="/join"
-      />
+      <div
+        class="flex flex-wrap justify-center gap-3 w-full"
+        role="group"
+        aria-label="Filter initiatives by category"
+      >
+        <button
+          type="button"
+          class="cause-filter px-5 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-primary bg-primary-container text-on-primary shadow-sm transition-all"
+          data-category="all"
+          aria-pressed="true"
+          aria-controls="causes-grid"
+        >
+          All
+        </button>
+        {
+          causes.map((cause) => (
+            <button
+              type="button"
+              class="cause-filter px-5 py-2 rounded-full font-sans text-label-caps font-semibold uppercase tracking-wider border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:border-primary hover:text-primary transition-all"
+              data-category={cause.slug}
+              aria-pressed="false"
+              aria-controls="causes-grid"
+            >
+              {cause.name}
+            </button>
+          ))
+        }
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <output
+          id="cause-results-count"
+          class="font-sans text-body-sm text-on-surface-variant"
+          role="status"
+          aria-live="polite"
+        >Showing all {causes.length} initiatives</output>
+        <button
+          id="cause-reset"
+          type="button"
+          class="font-sans text-label-md font-semibold text-primary underline underline-offset-4 hover:text-primary-container focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled
+        >
+          Clear search and filters
+        </button>
+      </div>
     </section>
 
-    <!-- Impact Summary Section (Glassmorphism/Minimalist) -->
+    <section
+      id="causes-grid"
+      class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 w-full"
+      aria-label="Initiatives"
+    >
+      {
+        causes.map((cause) => {
+          const searchableText = [
+            cause.name,
+            cause.hindi,
+            cause.title,
+            cause.titleHindi,
+            cause.intro,
+            ...cause.focus.flatMap((item) => [item.label, item.hindi, item.copy]),
+            ...cause.programs.flatMap((program) => [
+              program.title,
+              program.hindi,
+              program.copy,
+            ]),
+            ...cause.ways.flatMap((way) => [way.title, way.copy]),
+          ]
+            .filter(Boolean)
+            .join(" ");
+
+          return (
+            <article
+              class="cause-card flex flex-col overflow-hidden rounded-xl bg-surface border border-outline-variant/30 shadow-[0_4px_12px_rgba(0,0,128,0.05)] transition-shadow hover:shadow-[0_8px_24px_rgba(0,0,128,0.1)]"
+              data-cause-card
+              data-category={cause.slug}
+              data-search={searchableText}
+            >
+              <div class="relative h-48 overflow-hidden">
+                <img
+                  class="h-full w-full object-cover"
+                  src={cause.heroImage}
+                  alt={cause.imageAlt}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="absolute top-4 left-4 flex items-center gap-2 rounded-full bg-surface/95 px-3 py-1 text-xs font-semibold text-on-surface shadow-sm">
+                  <span class="material-symbols-outlined text-base" aria-hidden="true">
+                    {cause.icon}
+                  </span>
+                  {cause.name}
+                </span>
+              </div>
+              <div class="flex grow flex-col p-6">
+                <h2 class="font-display text-title-sm font-semibold text-on-surface">
+                  {cause.name}
+                </h2>
+                {cause.hindi && (
+                  <p class="mt-1 font-sans text-body-sm text-on-surface-variant">
+                    {cause.hindi}
+                  </p>
+                )}
+                <p class="mt-3 font-sans text-body-md font-semibold text-primary">
+                  {cause.title}
+                </p>
+                <p class="mt-3 mb-6 grow font-sans text-body-md text-on-surface-variant">
+                  {cause.summary}
+                </p>
+                <a
+                  class="mt-auto inline-flex items-center gap-2 font-sans text-label-md font-semibold text-primary transition-colors hover:text-primary-container focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                  href={"/cause/" + cause.slug + "/"}
+                >
+                  Explore initiative
+                  <span class="material-symbols-outlined text-lg" aria-hidden="true">
+                    arrow_forward
+                  </span>
+                </a>
+              </div>
+            </article>
+          );
+        })
+      }
+    </section>
+
+    <section
+      id="cause-empty"
+      class="hidden w-full rounded-xl border border-outline-variant bg-surface-container-low p-8 text-center"
+      aria-live="polite"
+    >
+      <h2 class="font-display text-title-md font-semibold text-on-surface">
+        No initiatives found
+      </h2>
+      <p class="mt-2 font-sans text-body-md text-on-surface-variant">
+        Try a different search term or clear the filters to see all initiatives.
+      </p>
+    </section>
+
     <section
       class="w-full bg-surface-container-high rounded-xl p-8 md:p-12 mt-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-outline-variant relative overflow-hidden"
     >
-      <!-- Decorative element -->
       <div
         class="absolute top-0 right-0 w-64 h-64 bg-primary opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"
-      >
-      </div>
+        aria-hidden="true"
+      ></div>
       <div
         class="flex flex-col gap-2 max-w-md relative z-10 text-center md:text-left"
       >
-        <h2 class="font-display md:font-display text-on-surface">
-          Can't find a specific project?
+        <h2 class="font-display text-on-surface">
+          Can't find a specific initiative?
         </h2>
         <p class="font-sans text-on-surface-variant">
-          Your general donation helps us allocate funds to the areas with the
-          most urgent needs across all our causes.
+          A general donation helps us direct support to the areas with the most
+          urgent needs across our work.
         </p>
       </div>
-      <a href="/donate">
-        <button
-          class="font-sans text-label-caps font-semibold uppercase tracking-wider py-4 px-8 rounded-full hover:shadow-lg hover:bg-primary transition-all whitespace-nowrap relative z-10 shadow-md transform hover:-translate-y-1 bg-primary-container text-on-primary"
-        >
-          Donate to General Fund
-        </button>
+      <a
+        class="font-sans text-label-caps font-semibold uppercase tracking-wider py-4 px-8 rounded-full hover:shadow-lg hover:bg-primary transition-all whitespace-nowrap relative z-10 shadow-md transform hover:-translate-y-1 bg-primary-container text-on-primary"
+        href="/donate/"
+      >
+        Donate to General Fund
       </a>
     </section>
   </main>
+
+  <script>
+    const searchInput = document.querySelector("#cause-search");
+    const filterButtons = Array.from(document.querySelectorAll(".cause-filter"));
+    const cards = Array.from(document.querySelectorAll("[data-cause-card]"));
+    const resultCount = document.querySelector("#cause-results-count");
+    const emptyState = document.querySelector("#cause-empty");
+    const resetButton = document.querySelector("#cause-reset");
+
+    let activeCategory = "all";
+
+    const normalize = (value) =>
+      value
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLocaleLowerCase()
+        .trim();
+
+    const updateResults = () => {
+      const query = normalize(searchInput.value);
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const matchesCategory =
+          activeCategory === "all" || card.dataset.category === activeCategory;
+        const matchesSearch = normalize(card.dataset.search || "").includes(query);
+        const isVisible = matchesCategory && matchesSearch;
+
+        card.hidden = !isVisible;
+        if (isVisible) visibleCount += 1;
+      });
+
+      resultCount.textContent =
+        visibleCount === cards.length
+          ? "Showing all " + cards.length + " initiatives"
+          : "Showing " + visibleCount + " of " + cards.length + " initiatives";
+      emptyState.classList.toggle("hidden", visibleCount !== 0);
+      resetButton.disabled = query.length === 0 && activeCategory === "all";
+    };
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeCategory = button.dataset.category || "all";
+
+        filterButtons.forEach((filterButton) => {
+          const selected = filterButton === button;
+          filterButton.setAttribute("aria-pressed", String(selected));
+          filterButton.classList.toggle("border-primary", selected);
+          filterButton.classList.toggle("bg-primary-container", selected);
+          filterButton.classList.toggle("text-on-primary", selected);
+          filterButton.classList.toggle("shadow-sm", selected);
+          filterButton.classList.toggle("border-outline-variant", !selected);
+          filterButton.classList.toggle("bg-surface-container-lowest", !selected);
+          filterButton.classList.toggle("text-on-surface-variant", !selected);
+        });
+
+        updateResults();
+      });
+    });
+
+    searchInput.addEventListener("input", updateResults);
+
+    resetButton.addEventListener("click", () => {
+      searchInput.value = "";
+      activeCategory = "all";
+      filterButtons.forEach((button) => {
+        const selected = button.dataset.category === "all";
+        button.setAttribute("aria-pressed", String(selected));
+        button.classList.toggle("border-primary", selected);
+        button.classList.toggle("bg-primary-container", selected);
+        button.classList.toggle("text-on-primary", selected);
+        button.classList.toggle("shadow-sm", selected);
+        button.classList.toggle("border-outline-variant", !selected);
+        button.classList.toggle("bg-surface-container-lowest", !selected);
+        button.classList.toggle("text-on-surface-variant", !selected);
+      });
+      updateResults();
+      searchInput.focus();
+    });
+  </script>
+  <style>
+    .cause-card[hidden] {
+      display: none;
+    }
+  </style>
 </BaseLayout>
