@@ -5,15 +5,6 @@ function git(args) {
   return execFileSync("git", args, { encoding: "utf8" }).trimEnd();
 }
 
-function canResolve(ref) {
-  try {
-    git(["rev-parse", "--verify", `${ref}^{commit}`]);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function getCiRange() {
   const eventPath = process.env.GITHUB_EVENT_PATH;
 
@@ -41,7 +32,17 @@ function getCiRange() {
 }
 
 function getLocalRange() {
-  const baseRef = ["origin/main", "main"].find(canResolve);
+  let baseRef = null;
+
+  for (const ref of ["origin/main", "main"]) {
+    try {
+      git(["rev-parse", "--verify", `${ref}^{commit}`]);
+      baseRef = ref;
+      break;
+    } catch {
+      // Try the next local base reference.
+    }
+  }
 
   if (!baseRef) {
     return null;
@@ -53,38 +54,41 @@ function getLocalRange() {
   };
 }
 
-function getChangedFiles(range) {
-  const changed = git([
-    "diff",
-    "--name-only",
-    "--diff-filter=ACMR",
-    ...(range ? [`${range.base}...${range.head}`] : ["HEAD"]),
-  ])
-    .split(/\r?\n/)
-    .filter(Boolean);
+function lineOffset(lines, lineNumber) {
+  let offset = 0;
 
-  if (range) {
-    return changed;
+  for (let index = 0; index < lineNumber - 1; index += 1) {
+    offset += (lines[index] ?? "").length + 1;
   }
 
-  const untracked = git(["ls-files", "--others", "--exclude-standard"])
-    .split(/\r?\n/)
-    .filter(Boolean);
-
-  return [...new Set([...changed, ...untracked])];
+  return offset;
 }
 
-function getAddedRanges(patch, content) {
-  const lines = content.split("\n");
-  const offsetForLine = (lineNumber) =>
-    lines
-      .slice(0, lineNumber - 1)
-      .reduce((offset, line) => offset + line.length + 1, 0);
-  const ranges = [];
+function checkWholeFile(file) {
+  const args = [
+    "prettier",
+    "--check",
+    "--ignore-unknown",
+    "--",
+    file,
+  ];
 
-  for (const match of patch.matchAll(
-    /^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/gm,
-  )) {
+  execFileSync("npx", args, { stdio: "inherit" });
+}
+
+function checkLegacyChanges(file, range) {
+  const diffArgs = ["diff", "--no-ext-diff", "--unified=0"];
+
+  diffArgs.push(range ? `${range.base}...${range.head}` : "HEAD");
+  diffArgs.push("--", file);
+
+  const patch = git(diffArgs);
+  const content = readFileSync(file, "utf8");
+  const lines = content.split("\n");
+  const header = /^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/gm;
+  let match;
+
+  while ((match = header.exec(patch)) !== null) {
     const startLine = Number(match[1]);
     const lineCount = Number(match[2] ?? 1);
 
@@ -92,59 +96,53 @@ function getAddedRanges(patch, content) {
       continue;
     }
 
-    const range = {
-      start: Math.min(offsetForLine(startLine), content.length),
-      end: Math.min(offsetForLine(startLine + lineCount), content.length),
-    };
+    const start = lineOffset(lines, startLine);
+    const end = lineOffset(lines, startLine + lineCount);
 
-    if (range.end > range.start) {
-      ranges.push(range);
+    if (end <= start) {
+      continue;
     }
-  }
 
-  return ranges;
-}
+    const args = [
+      "prettier",
+      "--check",
+      "--range-start",
+      String(start),
+      "--range-end",
+      String(end),
+      "--ignore-unknown",
+      "--",
+      file,
+    ];
 
-function checkWholeFile(file) {
-  execFileSync(
-    "npx",
-    ["prettier", "--check", "--ignore-unknown", "--", file],
-    { stdio: "inherit" },
-  );
-}
-
-function checkChangedRanges(file, patch) {
-  const content = readFileSync(file, "utf8");
-  const ranges = getAddedRanges(patch, content);
-
-  if (ranges.length === 0) {
-    return;
-  }
-
-  for (const range of ranges) {
-    execFileSync(
-      "npx",
-      [
-        "prettier",
-        "--check",
-        "--range-start",
-        String(range.start),
-        "--range-end",
-        String(range.end),
-        "--ignore-unknown",
-        "--",
-        file,
-      ],
-      { stdio: "inherit" },
-    );
+    execFileSync("npx", args, { stdio: "inherit" });
   }
 }
 
 const range = getCiRange() ?? getLocalRange();
-const changedFiles = getChangedFiles(range);
+const diffArgs = [
+  "diff",
+  "--name-only",
+  "--diff-filter=ACMR",
+  range ? `${range.base}...${range.head}` : "HEAD",
+];
 
-// These pages predate the repository-wide Prettier cleanup. Check their
-// changed regions without making unrelated legacy formatting block CI.
+const changedFiles = git(diffArgs)
+  .split(/\r?\n/)
+  .filter(Boolean);
+
+if (!range) {
+  const untracked = git([
+    "ls-files",
+    "--others",
+    "--exclude-standard",
+  ])
+    .split(/\r?\n/)
+    .filter(Boolean);
+
+  changedFiles.push(...untracked);
+}
+
 const legacyFormattingDebt = new Set([
   "src/pages/cause.astro",
   "src/pages/contact.astro",
@@ -156,17 +154,9 @@ if (changedFiles.length === 0) {
   process.exit(0);
 }
 
-for (const file of changedFiles) {
+for (const file of new Set(changedFiles)) {
   if (legacyFormattingDebt.has(file)) {
-    const diffArgs = [
-      "diff",
-      "--no-ext-diff",
-      "--unified=0",
-      ...(range ? [`${range.base}...${range.head}`] : ["HEAD"]),
-      "--",
-      file,
-    ];
-    checkChangedRanges(file, git(diffArgs));
+    checkLegacyChanges(file, range);
   } else {
     checkWholeFile(file);
   }
