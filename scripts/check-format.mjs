@@ -65,6 +65,15 @@ function lineOffset(lines, lineNumber) {
 }
 
 function checkWholeFile(file) {
+  if (file === "scripts/check-format.mjs") {
+    const formatted = execFileSync("npx", ["prettier", file], {
+      encoding: "utf8",
+    });
+    console.log("FORMAT_OUTPUT_START");
+    process.stdout.write(formatted);
+    console.log("FORMAT_OUTPUT_END");
+  }
+
   const args = [
     "prettier",
     "--check",
