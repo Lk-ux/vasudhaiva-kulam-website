@@ -80,22 +80,29 @@ function getAddedRanges(patch, content) {
     lines
       .slice(0, lineNumber - 1)
       .reduce((offset, line) => offset + line.length + 1, 0);
+  const ranges = [];
 
-  return [...patch.matchAll(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/gm)]
-    .map((match) => {
-      const startLine = Number(match[1]);
-      const lineCount = Number(match[2] ?? 1);
+  for (const match of patch.matchAll(
+    /^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/gm,
+  )) {
+    const startLine = Number(match[1]);
+    const lineCount = Number(match[2] ?? 1);
 
-      if (lineCount === 0) {
-        return null;
-      }
+    if (lineCount === 0) {
+      continue;
+    }
 
-      return {
-        start: Math.min(offsetForLine(startLine), content.length),
-        end: Math.min(offsetForLine(startLine + lineCount), content.length),
-      };
-    })
-    .filter((range) => range && range.end > range.start);
+    const range = {
+      start: Math.min(offsetForLine(startLine), content.length),
+      end: Math.min(offsetForLine(startLine + lineCount), content.length),
+    };
+
+    if (range.end > range.start) {
+      ranges.push(range);
+    }
+  }
+
+  return ranges;
 }
 
 function checkWholeFile(file) {
