@@ -7,10 +7,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint \"src/**/*.{js,mjs,cjs,ts,mts,cts,tsx,astro}\" \"astro.config.mjs\" \"eslint.config.mjs\"",
+    "lint": "eslint \"src/**/*.{js,mjs,cjs,ts,mts,cts,tsx,astro}\" \"scripts/**/*.{js,mjs,cjs,ts,mts,cts}\" \"astro.config.mjs\" \"eslint.config.mjs\"",
     "format": "prettier . --write",
     "format:check": "node scripts/check-format.mjs",
     "typecheck": "astro check",
@@ -38,8 +38,8 @@
     "tailwindcss": "^4.3.3"
   },
   "allowScripts": {
-    "@parcel/watcher@2.5.1": true,
-    "esbuild": true
+    "esbuild": true,
+    "@parcel/watcher@2.6.0": true
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
