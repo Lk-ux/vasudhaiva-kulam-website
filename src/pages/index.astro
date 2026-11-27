@@ -167,11 +167,11 @@ import { causes } from "../data/causes";
 
   <script>
     // Counter Animation
-    const counters = document.querySelectorAll(".counter");
+    const counters = document.querySelectorAll<HTMLElement>(".counter");
     const speed = 20000; // The HIGHER the number, the slower the animation
 
     // 1. Define the update function outside the loop
-    const updateCount = (counter) => {
+    const updateCount = (counter: HTMLElement) => {
       const target = +counter.getAttribute("data-target");
       const count = +counter.innerText || 0; // Fallback to 0 if initially empty
       const inc = target / speed;
@@ -188,7 +188,7 @@ import { causes } from "../data/causes";
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          updateCount(entry.target);
+          updateCount(entry.target as HTMLElement);
           obs.unobserve(entry.target); // Run once per element
         }
       });
