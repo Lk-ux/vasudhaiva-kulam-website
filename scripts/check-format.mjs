@@ -1,10 +1,17 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { log } from "node:console";
-import process from "node:process";
 
 function git(args) {
   return execFileSync("git", args, { encoding: "utf8" }).trimEnd();
+}
+
+function canResolve(ref) {
+  try {
+    git(["rev-parse", "--verify", `${ref}^{commit}`]);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function getCiRange() {
@@ -33,15 +40,28 @@ function getCiRange() {
   return null;
 }
 
+function getLocalRange() {
+  const baseRef = ["origin/main", "main"].find(canResolve);
+
+  if (!baseRef) {
+    return null;
+  }
+
+  return {
+    base: git(["merge-base", baseRef, "HEAD"]),
+    head: "HEAD",
+  };
+}
+
 function getChangedFiles(range) {
-  const args = [
+  const changed = git([
     "diff",
     "--name-only",
     "--diff-filter=ACMR",
     ...(range ? [`${range.base}...${range.head}`] : ["HEAD"]),
-  ];
-
-  const changed = git(args).split(/\r?\n/).filter(Boolean);
+  ])
+    .split(/\r?\n/)
+    .filter(Boolean);
 
   if (range) {
     return changed;
@@ -113,7 +133,7 @@ function checkChangedRanges(file, patch) {
   }
 }
 
-const range = getCiRange();
+const range = getCiRange() ?? getLocalRange();
 const changedFiles = getChangedFiles(range);
 
 // These pages predate the repository-wide Prettier cleanup. Check their
@@ -125,7 +145,7 @@ const legacyFormattingDebt = new Set([
 ]);
 
 if (changedFiles.length === 0) {
-  log("No changed files to format-check.");
+  console.log("No changed files to format-check.");
   process.exit(0);
 }
 
