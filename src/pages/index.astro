@@ -172,12 +172,12 @@ import { causes } from "../data/causes";
 
     // 1. Define the update function outside the loop
     const updateCount = (counter: HTMLElement) => {
-      const target = +counter.getAttribute("data-target");
+      const target = Number(counter.getAttribute("data-target") ?? 0);
       const count = +counter.innerText || 0; // Fallback to 0 if initially empty
       const inc = target / speed;
 
       if (count < target) {
-        counter.innerText = Math.ceil(count + inc);
+        counter.innerText = String(Math.ceil(count + inc));
         requestAnimationFrame(() => updateCount(counter));
       } else {
         counter.innerText = target + "+"; // Add plus sign when done
