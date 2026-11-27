@@ -205,16 +205,26 @@ import { causes } from "../data/causes";
   </main>
 
   <script>
-    const searchInput = document.querySelector("#cause-search");
-    const filterButtons = Array.from(document.querySelectorAll(".cause-filter"));
-    const cards = Array.from(document.querySelectorAll("[data-cause-card]"));
-    const resultCount = document.querySelector("#cause-results-count");
-    const emptyState = document.querySelector("#cause-empty");
-    const resetButton = document.querySelector("#cause-reset");
+    const searchInput = document.querySelector<HTMLInputElement>("#cause-search");
+    const filterButtons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>(".cause-filter"),
+    );
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-cause-card]"),
+    );
+    const resultCount = document.querySelector<HTMLOutputElement>(
+      "#cause-results-count",
+    );
+    const emptyState = document.querySelector<HTMLElement>("#cause-empty");
+    const resetButton = document.querySelector<HTMLButtonElement>("#cause-reset");
+
+    if (!searchInput || !resultCount || !emptyState || !resetButton) {
+      throw new Error("Required cause filter elements were not found.");
+    }
 
     let activeCategory = "all";
 
-    const normalize = (value) =>
+    const normalize = (value: string) =>
       value
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
