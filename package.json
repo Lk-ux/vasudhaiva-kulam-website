@@ -12,7 +12,7 @@
     "astro": "astro",
     "lint": "eslint \"src/**/*.{js,mjs,cjs,ts,mts,cts,tsx,astro}\" \"astro.config.mjs\" \"eslint.config.mjs\"",
     "format": "prettier . --write",
-    "format:check": "prettier . --check",
+    "format:check": "node scripts/check-format.mjs",
     "typecheck": "astro check",
     "check": "npm run lint && npm run format:check && npm run typecheck"
   },
