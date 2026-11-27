@@ -65,22 +65,7 @@ function lineOffset(lines, lineNumber) {
 }
 
 function checkWholeFile(file) {
-  if (file === "scripts/check-format.mjs") {
-    const formatted = execFileSync("npx", ["prettier", file], {
-      encoding: "utf8",
-    });
-    console.log("FORMAT_OUTPUT_START");
-    process.stdout.write(formatted);
-    console.log("FORMAT_OUTPUT_END");
-  }
-
-  const args = [
-    "prettier",
-    "--check",
-    "--ignore-unknown",
-    "--",
-    file,
-  ];
+  const args = ["prettier", "--check", "--ignore-unknown", "--", file];
 
   execFileSync("npx", args, { stdio: "inherit" });
 }
@@ -136,16 +121,10 @@ const diffArgs = [
   range ? `${range.base}...${range.head}` : "HEAD",
 ];
 
-const changedFiles = git(diffArgs)
-  .split(/\r?\n/)
-  .filter(Boolean);
+const changedFiles = git(diffArgs).split(/\r?\n/).filter(Boolean);
 
 if (!range) {
-  const untracked = git([
-    "ls-files",
-    "--others",
-    "--exclude-standard",
-  ])
+  const untracked = git(["ls-files", "--others", "--exclude-standard"])
     .split(/\r?\n/)
     .filter(Boolean);
 
