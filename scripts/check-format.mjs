@@ -1,8 +1,10 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { log } from "node:console";
+import process from "node:process";
 
 function git(args) {
-  return execFileSync("git", args, { encoding: "utf8" }).trim();
+  return execFileSync("git", args, { encoding: "utf8" }).trimEnd();
 }
 
 function getCiRange() {
@@ -31,37 +33,114 @@ function getCiRange() {
   return null;
 }
 
-const range = getCiRange();
+function getChangedFiles(range) {
+  const args = [
+    "diff",
+    "--name-only",
+    "--diff-filter=ACMR",
+    ...(range ? [`${range.base}...${range.head}`] : ["HEAD"]),
+  ];
 
-if (!range) {
-  execFileSync("npx", ["prettier", ".", "--check"], { stdio: "inherit" });
-  process.exit(0);
+  const changed = git(args).split(/\r?\n/).filter(Boolean);
+
+  if (range) {
+    return changed;
+  }
+
+  const untracked = git(["ls-files", "--others", "--exclude-standard"])
+    .split(/\r?\n/)
+    .filter(Boolean);
+
+  return [...new Set([...changed, ...untracked])];
 }
 
-// These existing pages already had Prettier drift on the base branch.
-// Keep their type fixes focused; format cleanup can be handled separately.
+function getAddedRanges(patch, content) {
+  const lines = content.split("\n");
+  const offsetForLine = (lineNumber) =>
+    lines
+      .slice(0, lineNumber - 1)
+      .reduce((offset, line) => offset + line.length + 1, 0);
+
+  return [...patch.matchAll(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/gm)]
+    .map((match) => {
+      const startLine = Number(match[1]);
+      const lineCount = Number(match[2] ?? 1);
+
+      if (lineCount === 0) {
+        return null;
+      }
+
+      return {
+        start: Math.min(offsetForLine(startLine), content.length),
+        end: Math.min(offsetForLine(startLine + lineCount), content.length),
+      };
+    })
+    .filter((range) => range && range.end > range.start);
+}
+
+function checkWholeFile(file) {
+  execFileSync(
+    "npx",
+    ["prettier", "--check", "--ignore-unknown", "--", file],
+    { stdio: "inherit" },
+  );
+}
+
+function checkChangedRanges(file, patch) {
+  const content = readFileSync(file, "utf8");
+  const ranges = getAddedRanges(patch, content);
+
+  if (ranges.length === 0) {
+    return;
+  }
+
+  for (const range of ranges) {
+    execFileSync(
+      "npx",
+      [
+        "prettier",
+        "--check",
+        "--range-start",
+        String(range.start),
+        "--range-end",
+        String(range.end),
+        "--ignore-unknown",
+        "--",
+        file,
+      ],
+      { stdio: "inherit" },
+    );
+  }
+}
+
+const range = getCiRange();
+const changedFiles = getChangedFiles(range);
+
+// These pages predate the repository-wide Prettier cleanup. Check their
+// changed regions without making unrelated legacy formatting block CI.
 const legacyFormattingDebt = new Set([
   "src/pages/cause.astro",
   "src/pages/contact.astro",
   "src/pages/index.astro",
 ]);
 
-const changedFiles = git([
-  "diff",
-  "--name-only",
-  "--diff-filter=ACMR",
-  `${range.base}...${range.head}`,
-])
-  .split(/\r?\n/)
-  .filter((file) => file && !legacyFormattingDebt.has(file));
-
 if (changedFiles.length === 0) {
-  console.log("No changed files to format-check.");
+  log("No changed files to format-check.");
   process.exit(0);
 }
 
-execFileSync(
-  "npx",
-  ["prettier", "--check", "--ignore-unknown", "--", ...changedFiles],
-  { stdio: "inherit" },
-);
+for (const file of changedFiles) {
+  if (legacyFormattingDebt.has(file)) {
+    const diffArgs = [
+      "diff",
+      "--no-ext-diff",
+      "--unified=0",
+      ...(range ? [`${range.base}...${range.head}`] : ["HEAD"]),
+      "--",
+      file,
+    ];
+    checkChangedRanges(file, git(diffArgs));
+  } else {
+    checkWholeFile(file);
+  }
+}
