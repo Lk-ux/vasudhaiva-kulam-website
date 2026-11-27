@@ -54,6 +54,6 @@ if (changedFiles.length === 0) {
 
 execFileSync(
   "npx",
-  ["prettier", "--check", "--ignore-unknown", ...changedFiles],
+  ["prettier", "--check", "--ignore-unknown", "--", ...changedFiles],
   { stdio: "inherit" },
 );
