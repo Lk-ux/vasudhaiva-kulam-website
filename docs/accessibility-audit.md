@@ -68,21 +68,49 @@ Shared navigation must also be checked on multiple routes and in both responsive
 |---|---|
 | Method | Remote source-code inspection and static color-token calculation |
 | Repository revision | \`main\` — \`1606ded99b973eafb7d75099094e3741b464b8c6\` |
-| Browser and version | Not used / not recorded |
-| Operating system | Not used / not recorded |
-| Desktop viewport | Not tested |
-| Mobile viewport | Not tested |
-| Browser zoom / text resize | Not tested |
+| Browser and version | Headless Chromium 144.0.0.0 (via Playwright) — reproduction fixture only |
+| Browser automation | Playwright 1.57.0 |
+| Operating system | Linux container runtime; distribution/kernel version not recorded |
+| Fixture viewport | 390 × 844 CSS pixels, device scale factor 1, default 100% zoom |
+| Actual website desktop viewport | Not tested |
+| Actual website mobile viewport | Not tested |
+| Browser zoom / text resize on actual website | Not tested |
 | Screen reader | None used |
 | Automated accessibility scanner | None run |
+| Actual deployed website | Not reachable from this environment; app URL from `astro.config.mjs` is `https://vasudhaiva-kulam.vercel.app` |
 | Local production build | Not run as part of this audit baseline |
 | Date | 2026-11-28 |
 
 The repository's GitHub Actions workflow performs linting, formatting checks, type checking and a production build. Those checks are useful for software quality but are not an accessibility scan and do not replace manual testing. No new package, paid provider, API or external audit service was introduced for this baseline.
 
+### Limited browser reproduction fixture — not the running website
+
+A local HTML fixture was created to reproduce the relevant DOM, CSS and JavaScript patterns found in the inspected source. It was opened with headless Chromium using Playwright. This is a genuine browser execution of those patterns, but it is **not** a build of the Astro application and does not verify the deployed website, Tailwind-generated styles in the application, page-specific layout, or every route.
+
+Environment: Headless Chromium 144.0.0.0 on the Linux container runtime; Playwright 1.57.0; viewport 390 × 844 CSS pixels; device scale factor 1; default zoom 100%.
+
+Observed fixture results:
+
+| Check | Browser observation |
+|---|---|
+| Closed drawer keyboard access | After focusing the menu trigger and pressing Tab, focus moved to the off-screen drawer's `closeDrawer` button. |
+| Initial menu state | `aria-expanded` and `aria-controls` were absent from the trigger. |
+| Focus on opening | Clicking the menu trigger opened the drawer, but focus remained on the trigger instead of moving into the drawer. |
+| Escape behavior | Pressing Escape left the drawer open. |
+| Focus containment | Tabbing through the open drawer moved through its three links, then escaped to the page's email input and Donate CTA. |
+| Focus after close | Clicking the drawer close button closed the drawer but left focus on `closeDrawer`, inside the off-screen drawer. |
+| Hidden checkbox | Computed `display` was `none`; Playwright's role query found zero exposed checkboxes. |
+| Tab sequence after email input | Tab skipped the hidden checkbox and moved to the Donate link. |
+| Input focus styling | Computed outline was `none` with `0px` width; the bottom border changed to `rgb(255, 153, 51)`. |
+| Selected chip colors | Computed foreground was white and background was `rgb(255, 153, 51)`. |
+| Nested interactive markup | The fixture contained one `a button` pair, matching the source pattern identified in the homepage/navigation markup. |
+| Hindi passage language | The fixture's Hindi paragraph inherited `lang="en"` from the root and had no local language annotation. |
+
+These results support the source-pattern findings VK-A11Y-001, VK-A11Y-002, VK-A11Y-003, VK-A11Y-004, VK-A11Y-005 and VK-A11Y-006. They do **not** establish that the actual running app has been browser-tested. The source inspection identified the partnership form label concern (VK-A11Y-007); it was not included in this fixture.
+
 ### Limitations
 
-- No browser-rendered evidence is available yet. CSS behavior, computed colors, focus visibility and responsive layout must be confirmed in a browser.
+- No browser-rendered evidence from the actual Astro application is available yet. The local fixture only verifies isolated source patterns. CSS behavior, computed colors, focus visibility and responsive layout must be confirmed on the actual rendered pages.
 - No keyboard-only journey has been completed.
 - No screen-reader/browser combination has been tested. NVDA with Firefox or Chrome on Windows and VoiceOver with Safari on macOS or iOS remain untested.
 - No 320 CSS-pixel reflow, 200% text resizing, browser zoom, orientation, touch target or reduced-motion checks have been run.
@@ -282,10 +310,10 @@ Record the actual browser, OS, viewport, zoom and assistive-technology versions 
 | Mobile route sampling | Current mobile browser, approximately 390 × 844 CSS px | Not run |
 | Reflow | 320 CSS-pixel viewport width | Not run |
 | Text resize | 200% text resize / browser zoom as applicable | Not run |
-| Keyboard-only | Navigation, find a cause, join, contact and donation journeys | Not run |
+| Keyboard-only | Navigation, find a cause, join, contact and donation journeys | Partial — isolated source-pattern fixture only; actual site journeys not run |
 | Desktop screen reader | NVDA + Firefox or Chrome on Windows, versions recorded | Not run |
 | Apple screen reader | VoiceOver + Safari on macOS or iOS, versions recorded, where available | Not run |
-| Contrast | Text, controls, icons, focus, hover, selected, error and disabled states | Partial token calculation only |
+| Contrast | Text, controls, icons, focus, hover, selected, error and disabled states | Partial — token calculations and fixture computed-style checks only |
 | Target size | Applicable controls at mobile and desktop sizes | Not run |
 | Focus visibility / obstruction | Sticky navigation, drawer, dialogs/overlays, all form controls | Not run |
 | Reduced motion | OS/browser reduced-motion preference; counters, smooth scrolling and transitions | Not run |
