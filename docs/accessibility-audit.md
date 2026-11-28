@@ -3,7 +3,7 @@
 - **Parent tracking issue:** [#32 — Audit WCAG 2.2 AA accessibility and document actionable findings](https://github.com/Lk-ux/vasudhaiva-kulam-website/issues/32)
 - **Audit date:** 2026-11-28
 - **Audit status:** Initial source-review baseline; **not a completed WCAG audit**
-- **Repository snapshot reviewed:** \`main\` at \`1606ded99b973eafb7d75099094e3741b464b8c6\`
+- **Repository snapshot reviewed:** `main` at `1606ded99b973eafb7d75099094e3741b464b8c6`
 - **Conformance statement:** None. The evidence below is not sufficient to claim WCAG 2.2 AA conformance.
 
 ## 1. Executive summary
@@ -14,10 +14,10 @@ The highest-priority observations are:
 
 1. The closed mobile navigation drawer is visually translated off-screen but its links and close button remain ordinary focusable elements in the DOM.
 2. The selected volunteer-interest chips use white text on orange with a calculated contrast ratio of **2.13:1**, below the 4.5:1 AA requirement for normal text.
-3. The shared minimal-input focus style removes the default outline and uses an orange bottom border. The token contrast is approximately **2.13:1** against white and **2.02:1** against \`#f9f9f9\`, below 3:1 for applicable non-text state indicators.
-4. Hindi text appears within pages whose root language is English, with no \`lang="hi"\` annotation on the identified passages.
+3. The shared minimal-input focus style removes the default outline and uses an orange bottom border. The token contrast is approximately **2.13:1** against white and **2.02:1** against `#f9f9f9`, below 3:1 for applicable non-text state indicators.
+4. Hindi text appears within pages whose root language is English, with no `lang="hi"` annotation on the identified passages.
 5. Some CTAs nest a button inside a link.
-6. Volunteer-interest checkbox inputs use a \`hidden\` class (display none), while their visible labels act as chips; this removes the checkbox inputs from keyboard navigation and the accessibility tree.
+6. Volunteer-interest checkbox inputs use a `hidden` class (display none), while their visible labels act as chips; this removes the checkbox inputs from keyboard navigation and the accessibility tree.
 
 The report distinguishes source-confirmed markup/style observations from outcomes that still require a real browser or assistive technology to verify.
 
@@ -31,19 +31,19 @@ The required audit scope is broader than this baseline. Status below describes s
 | Shared mobile header and drawer | Markup and drawer script inspected | Open/close, Escape, focus entry/trap/restore, overlay, scroll, AT behavior |
 | Shared footer | Landmarks, headings and links sampled | Full keyboard, link-purpose, contrast, reflow and repeated-use checks |
 | Global typography and color tokens | Selected color pairs and input focus utility inspected | Full text/non-text contrast inventory, text spacing, resize and page-context checks |
-| \`/\` | Hero, language content and CTA markup sampled | Full page, images, all sections, interaction and responsive checks |
-| \`/about/\` | Heading and team-image alternatives sampled | Full page structure, all images, bilingual content and responsive checks |
-| \`/cause/\` | Search/filter structure sampled in source | Search, filters, announcements, reset, empty state and keyboard operation |
-| \`/cause/education/\` | Generated route template reviewed | Rendered route and content-specific checks |
-| \`/cause/health/\` | Generated route template reviewed | Rendered route and content-specific checks |
-| \`/cause/community-welfare/\` | Generated route template reviewed | Rendered route and content-specific checks |
-| \`/cause/environment/\` | Generated route template reviewed | Rendered route and content-specific checks |
-| \`/join/\` | Form and interest checkbox markup sampled | Form validation, checkbox interaction, error/status behavior and submission using safe synthetic data |
-| \`/contact/\` | Partnership form controls sampled | Labels, validation/status behavior, map, keyboard use and synthetic submission |
-| \`/donate/\` | QR, copy/share controls and status markup sampled | Keyboard/AT behavior, status announcements, QR alternative, download/share and mobile testing without making a donation |
-| \`/privacy/\` | Document language and heading sampled | Full structure, link purpose, language passages, zoom and reflow |
+| `/` | Hero, language content and CTA markup sampled | Full page, images, all sections, interaction and responsive checks |
+| `/about/` | Heading and team-image alternatives sampled | Full page structure, all images, bilingual content and responsive checks |
+| `/cause/` | Search/filter structure sampled in source | Search, filters, announcements, reset, empty state and keyboard operation |
+| `/cause/education/` | Generated route template reviewed | Rendered route and content-specific checks |
+| `/cause/health/` | Generated route template reviewed | Rendered route and content-specific checks |
+| `/cause/community-welfare/` | Generated route template reviewed | Rendered route and content-specific checks |
+| `/cause/environment/` | Generated route template reviewed | Rendered route and content-specific checks |
+| `/join/` | Form and interest checkbox markup sampled | Form validation, checkbox interaction, error/status behavior and submission using safe synthetic data |
+| `/contact/` | Partnership form controls sampled | Labels, validation/status behavior, map, keyboard use and synthetic submission |
+| `/donate/` | QR, copy/share controls and status markup sampled | Keyboard/AT behavior, status announcements, QR alternative, download/share and mobile testing without making a donation |
+| `/privacy/` | Document language and heading sampled | Full structure, link purpose, language passages, zoom and reflow |
 
-The generated cause routes are based on the four records in \`src/data/causes.ts\`: \`education\`, \`health\`, \`community-welfare\` and \`environment\`. Each generated route must be opened and checked individually; inspecting the shared template is not a substitute for checking the rendered content.
+The generated cause routes are based on the four records in `src/data/causes.ts`: `education`, `health`, `community-welfare` and `environment`. Each generated route must be opened and checked individually; inspecting the shared template is not a substitute for checking the rendered content.
 
 Shared navigation must also be checked on multiple routes and in both responsive variants. In particular, the closed drawer behavior must be tested on a normal page and a generated cause-detail page.
 
@@ -51,23 +51,23 @@ Shared navigation must also be checked on multiple routes and in both responsive
 
 ### Work performed
 
-- Inspected repository source files on the \`main\` snapshot listed above, including:
-  - \`src/components/Navigation.astro\`
-  - \`src/components/Footer.astro\`
-  - \`src/components/FooterLink.astro\`
-  - \`src/layouts/BaseLayout.astro\`
-  - \`src/styles/global.css\`
-  - selected markup in \`src/pages/index.astro\`, \`src/pages/about.astro\`, \`src/pages/cause.astro\`, \`src/pages/cause/[slug].astro\`, \`src/pages/join.astro\`, \`src/pages/contact.astro\`, \`src/pages/donate.astro\` and \`src/pages/privacy.astro\`
-  - \`src/data/causes.ts\`
-- Calculated selected color-pair contrast using the WCAG relative-luminance method for sRGB colors and the contrast ratio formula \`(L lighter + 0.05) / (L darker + 0.05)\`.
+- Inspected repository source files on the `main` snapshot listed above, including:
+  - `src/components/Navigation.astro`
+  - `src/components/Footer.astro`
+  - `src/components/FooterLink.astro`
+  - `src/layouts/BaseLayout.astro`
+  - `src/styles/global.css`
+  - selected markup in `src/pages/index.astro`, `src/pages/about.astro`, `src/pages/cause.astro`, `src/pages/cause/[slug].astro`, `src/pages/join.astro`, `src/pages/contact.astro`, `src/pages/donate.astro` and `src/pages/privacy.astro`
+  - `src/data/causes.ts`
+- Calculated selected color-pair contrast using the WCAG relative-luminance method for sRGB colors and the contrast ratio formula `(L lighter + 0.05) / (L darker + 0.05)`.
 - Compared repository markup and styles with the relevant WCAG 2.2 A/AA requirements to identify issues for browser verification and remediation.
 
 ### Tool and environment record
 
 | Item | Actual value for this pass |
 |---|---|
-| Method | Remote source-code inspection and static color-token calculation |
-| Repository revision | \`main\` — \`1606ded99b973eafb7d75099094e3741b464b8c6\` |
+| Method | Remote source-code inspection, static color-token calculation, and limited local Chromium reproduction fixture |
+| Repository revision | `main` — `1606ded99b973eafb7d75099094e3741b464b8c6` |
 | Browser and version | Headless Chromium 144.0.0.0 (via Playwright) — reproduction fixture only |
 | Browser automation | Playwright 1.57.0 |
 | Operating system | Linux container runtime; distribution/kernel version not recorded |
@@ -127,26 +127,26 @@ Severity uses the parent issue's categories: blocker/critical, high, medium and 
 - **Severity:** High
 - **Status:** Source-level defect identified; runtime reproduction pending
 - **Affected component:** Mobile navigation drawer
-- **Source:** \`src/components/Navigation.astro\`, approximately lines 101–148 and 175–212
+- **Source:** `src/components/Navigation.astro`, approximately lines 101–148 and 175–212
 - **WCAG:** 2.1.1 Keyboard (A), 2.4.3 Focus Order (A), 4.1.2 Name, Role, Value (A); verify 2.4.11 Focus Not Obscured (Minimum) (AA) during browser testing
-- **Evidence:** The closed drawer is positioned off-screen with \`-translate-x-full\`. Its navigation links and close button remain in the DOM as normal focusable elements. The script changes the transform class and overlay visibility but does not make the closed drawer inert or otherwise remove its descendants from sequential focus navigation. The menu button receives \`aria-expanded\` only after a click; no initial state or \`aria-controls\` relationship is present in the inspected markup. No Escape-key handler or focus-restoration logic appears in the drawer script.
+- **Evidence:** The closed drawer is positioned off-screen with `-translate-x-full`. Its navigation links and close button remain in the DOM as normal focusable elements. The script changes the transform class and overlay visibility but does not make the closed drawer inert or otherwise remove its descendants from sequential focus navigation. The menu button receives `aria-expanded` only after a click; no initial state or `aria-controls` relationship is present in the inspected markup. No Escape-key handler or focus-restoration logic appears in the drawer script.
 - **Expected:** When closed, drawer controls are not keyboard reachable or exposed as open navigation content. When opened, focus behavior and state are predictable and communicated to assistive technology. Closing returns focus to the menu trigger.
 - **Actual source behavior:** Visual off-screen positioning is implemented, but there is no corresponding hidden/inert or focus-management behavior in the inspected source.
 - **Reproduction to confirm:** At a mobile width, load a page with the drawer closed; use Tab and Shift+Tab through the header and page; record whether focus enters off-screen drawer links or the close button. Then open the drawer, traverse it, press Escape, close via the close button and overlay, and record focus destination each time.
-- **Suggested remediation:** Give the menu button a clear accessible name, initial \`aria-expanded="false"\` and \`aria-controls\`. Use a deliberate disclosure or modal-dialog pattern. Ensure closed content is inert and not focusable. If modal, move focus into the drawer, keep focus within it, support Escape, and restore focus on close. Ensure link activation closes the drawer without leaving focus in hidden content.
+- **Suggested remediation:** Give the menu button a clear accessible name, initial `aria-expanded="false"` and `aria-controls`. Use a deliberate disclosure or modal-dialog pattern. Ensure closed content is inert and not focusable. If modal, move focus into the drawer, keep focus within it, support Escape, and restore focus on close. Ensure link activation closes the drawer without leaving focus in hidden content.
 - **Tracking:** [#46 — Make the mobile navigation drawer keyboard and screen-reader accessible](https://github.com/Lk-ux/vasudhaiva-kulam-website/issues/46)
 
 ### VK-A11Y-002 — Selected volunteer-interest chips fail text contrast
 
 - **Severity:** Medium
 - **Status:** Color-token calculation confirms a contrast failure; browser rendering check pending
-- **Affected route/component:** \`/join/\`, volunteer-interest chips
-- **Source:** \`src/styles/global.css\`, approximately lines 108–113; inputs and labels in \`src/pages/join.astro\`, approximately lines 73–124
+- **Affected route/component:** `/join/`, volunteer-interest chips
+- **Source:** `src/styles/global.css`, approximately lines 108–113; inputs and labels in `src/pages/join.astro`, approximately lines 73–124
 - **WCAG:** 1.4.3 Contrast (Minimum) (AA)
-- **Evidence:** The checked chip uses \`--color-on-primary\` (\`#ffffff\`) on \`--color-primary-container\` (\`#ff9933\`). Calculated contrast is **2.13:1**. Normal-size text requires at least **4.5:1**.
+- **Evidence:** The checked chip uses `--color-on-primary` (`#ffffff`) on `--color-primary-container` (`#ff9933`). Calculated contrast is **2.13:1**. Normal-size text requires at least **4.5:1**.
 - **Expected:** Selected chip text meets the applicable text-contrast requirement and the selected state remains clearly identifiable.
 - **Actual source colors:** White text on orange, 2.13:1.
-- **Reproduction to confirm:** Open \`/join/\`, select an interest chip, inspect its computed foreground and background colors, and verify the browser-rendered pair against the recorded calculation.
+- **Reproduction to confirm:** Open `/join/`, select an interest chip, inspect its computed foreground and background colors, and verify the browser-rendered pair against the recorded calculation.
 - **Suggested remediation:** Use an existing dark foreground token with sufficient contrast on the orange background, or choose another accessible selected-state pair. Recheck hover, focus, checked and unchecked states.
 - **Tracking:** [#47 — Fix WCAG contrast for selected volunteer-interest tags](https://github.com/Lk-ux/vasudhaiva-kulam-website/issues/47)
 
@@ -154,10 +154,10 @@ Severity uses the parent issue's categories: blocker/critical, high, medium and 
 
 - **Severity:** Medium
 - **Status:** Source-level contrast concern; rendered focus-indicator verification pending
-- **Affected components:** Inputs and selects using \`input-minimal\`
-- **Source:** \`src/styles/global.css\`, approximately lines 116–129
+- **Affected components:** Inputs and selects using `input-minimal`
+- **Source:** `src/styles/global.css`, approximately lines 116–129
 - **WCAG:** 1.4.11 Non-text Contrast (AA), 2.4.7 Focus Visible (AA)
-- **Evidence:** The focus rule sets \`outline: none\` and \`box-shadow: none\`, then changes only the bottom border to \`#ff9933\`. The calculated orange-to-white ratio is **2.13:1**; orange to the \`#f9f9f9\` surface is **2.02:1**. These are below 3:1 for applicable visual state indicators.
+- **Evidence:** The focus rule sets `outline: none` and `box-shadow: none`, then changes only the bottom border to `#ff9933`. The calculated orange-to-white ratio is **2.13:1**; orange to the `#f9f9f9` surface is **2.02:1**. These are below 3:1 for applicable visual state indicators.
 - **Expected:** Keyboard focus is clearly visible, with an applicable indicator that meets the required contrast against adjacent colors.
 - **Actual source behavior:** The inspected rule removes the browser outline and relies on the orange bottom border. The exact rendered surface and the resulting focus indicator have not yet been checked in a browser.
 - **Reproduction to confirm:** Keyboard-focus each input and select that uses this utility on its actual page background. Record computed colors, border dimensions and focus appearance at normal and 200% zoom.
@@ -169,13 +169,13 @@ Severity uses the parent issue's categories: blocker/critical, high, medium and 
 - **Severity:** Medium
 - **Status:** Source-level defect identified; screen-reader pronunciation check pending
 - **Affected routes/components:** Homepage and generated cause-detail pages; inspect all other Hindi passages during the full audit
-- **Source:** \`src/layouts/BaseLayout.astro\` declares \`<html lang="en">\`; \`src/pages/index.astro\` contains Hindi hero text; \`src/pages/cause/[slug].astro\` renders \`cause.titleHindi\` in a paragraph without a language attribute; Hindi strings are supplied by \`src/data/causes.ts\`
+- **Source:** `src/layouts/BaseLayout.astro` declares `<html lang="en">`; `src/pages/index.astro` contains Hindi hero text; `src/pages/cause/[slug].astro` renders `cause.titleHindi` in a paragraph without a language attribute; Hindi strings are supplied by `src/data/causes.ts`
 - **WCAG:** 3.1.2 Language of Parts (AA)
-- **Evidence:** The document language is English and the inspected Hindi passages do not have a nested \`lang="hi"\` annotation.
+- **Evidence:** The document language is English and the inspected Hindi passages do not have a nested `lang="hi"` annotation.
 - **Expected:** The primary document language remains English and passages in another language are programmatically identified as Hindi.
 - **Actual source behavior:** The sampled Hindi text inherits the root English language declaration.
 - **Reproduction to confirm:** Inspect the rendered homepage and each generated cause-detail page's language attributes; listen to representative mixed Hindi/English passages with a documented screen reader.
-- **Suggested remediation:** Annotate Hindi phrases or blocks with \`lang="hi"\` while retaining \`lang="en"\` on the document root. Audit all rendered Hindi labels, headings, descriptions and navigation content.
+- **Suggested remediation:** Annotate Hindi phrases or blocks with `lang="hi"` while retaining `lang="en"` on the document root. Audit all rendered Hindi labels, headings, descriptions and navigation content.
 - **Tracking:** [#49 — Annotate Hindi text passages with the correct language](https://github.com/Lk-ux/vasudhaiva-kulam-website/issues/49)
 
 ### VK-A11Y-005 — CTAs contain nested interactive elements
@@ -183,7 +183,7 @@ Severity uses the parent issue's categories: blocker/critical, high, medium and 
 - **Severity:** Medium
 - **Status:** Source-level markup defect identified; browser/AT behavior pending
 - **Affected routes/components:** Desktop navigation and homepage hero
-- **Source:** \`src/components/Navigation.astro\` desktop Donate CTA; \`src/pages/index.astro\` Donate and Volunteer CTAs
+- **Source:** `src/components/Navigation.astro` desktop Donate CTA; `src/pages/index.astro` Donate and Volunteer CTAs
 - **WCAG:** 4.1.2 Name, Role, Value (A); verify keyboard focus order and screen-reader output
 - **Evidence:** The inspected source uses an anchor containing a button for navigation actions. Interactive elements should not be nested inside one another.
 - **Expected:** Each action is represented by one semantic interactive element with one accessible name and one keyboard focus stop.
@@ -196,28 +196,28 @@ Severity uses the parent issue's categories: blocker/critical, high, medium and 
 
 - **Severity:** High
 - **Status:** Source-level defect identified; runtime and screen-reader verification pending
-- **Affected route/component:** \`/join/\`, volunteer-interest options
-- **Source:** \`src/pages/join.astro\`, approximately lines 73–124; \`hidden\` is applied to each checkbox input
+- **Affected route/component:** `/join/`, volunteer-interest options
+- **Source:** `src/pages/join.astro`, approximately lines 73–124; `hidden` is applied to each checkbox input
 - **WCAG:** 2.1.1 Keyboard (A), 3.3.2 Labels or Instructions (A), 4.1.2 Name, Role, Value (A)
-- **Evidence:** The checkbox inputs use the Tailwind \`hidden\` class, which applies \`display: none\`. The visible chip is a label associated with the hidden input. The input is therefore removed from sequential keyboard navigation and the accessibility tree; a visible clickable label does not provide an equivalent keyboard-operable checkbox.
+- **Evidence:** The checkbox inputs use the Tailwind `hidden` class, which applies `display: none`. The visible chip is a label associated with the hidden input. The input is therefore removed from sequential keyboard navigation and the accessibility tree; a visible clickable label does not provide an equivalent keyboard-operable checkbox.
 - **Expected:** Each interest option is exposed as a labelled checkbox, can receive keyboard focus, and announces its checked state.
 - **Actual source behavior:** The form input itself is display-none; the visible label is the only presented chip.
-- **Reproduction to confirm:** On \`/join/\`, try reaching every interest option with Tab and toggling with Space. Inspect the accessibility tree and test with a screen reader.
-- **Suggested remediation:** Use a visually-hidden but accessible input pattern (not \`display: none\`) or a fully semantic alternative. Provide a visible focus indicator on the corresponding chip and preserve submitted field names and values.
+- **Reproduction to confirm:** On `/join/`, try reaching every interest option with Tab and toggling with Space. Inspect the accessibility tree and test with a screen reader.
+- **Suggested remediation:** Use a visually-hidden but accessible input pattern (not `display: none`) or a fully semantic alternative. Provide a visible focus indicator on the corresponding chip and preserve submitted field names and values.
 - **Tracking:** [#51 — Make volunteer-interest checkbox chips keyboard and screen-reader accessible](https://github.com/Lk-ux/vasudhaiva-kulam-website/issues/51)
 
 ### VK-A11Y-007 — Partnership form controls rely on placeholders instead of associated labels
 
 - **Severity:** Medium
 - **Status:** Source-level issue identified; coordinate remediation with existing form work
-- **Affected route/component:** \`/contact/\`, institutional partnership form
-- **Source:** \`src/pages/contact.astro\`, approximately lines 95–137
+- **Affected route/component:** `/contact/`, institutional partnership form
+- **Source:** `src/pages/contact.astro`, approximately lines 95–137
 - **WCAG:** 3.3.2 Labels or Instructions (A), 4.1.2 Name, Role, Value (A)
-- **Evidence:** The sampled Organization Name, Contact Person and Corporate Email inputs and Partnership Type select have placeholder/option text but no visible associated \`<label>\` elements or explicit accessible-name attributes in the inspected markup.
+- **Evidence:** The sampled Organization Name, Contact Person and Corporate Email inputs and Partnership Type select have placeholder/option text but no visible associated `<label>` elements or explicit accessible-name attributes in the inspected markup.
 - **Expected:** Every form control has a persistent, programmatically associated label; instructions and required status are clear without relying on placeholder text.
 - **Actual source markup:** The sampled controls rely on placeholder or initial option text.
 - **Reproduction to confirm:** Inspect each partnership form control's accessible name and verify labels remain available after a user enters a value or changes the select.
-- **Suggested remediation:** Add visible \`<label for>\` elements with unique IDs for all existing and new controls; confirm required/optional status with the organization. Coordinate with the existing form implementation rather than duplicating work.
+- **Suggested remediation:** Add visible `<label for>` elements with unique IDs for all existing and new controls; confirm required/optional status with the organization. Coordinate with the existing form implementation rather than duplicating work.
 - **Tracking:** Coordinate with [#22 — Add phone number fields to volunteer and partnership forms](https://github.com/Lk-ux/vasudhaiva-kulam-website/issues/22); verify that its implementation covers every existing partnership control as well as any new phone field.
 
 ## 5. Contrast measurements recorded in this pass
@@ -226,13 +226,13 @@ These are calculations from source color tokens, not screenshots or browser-comp
 
 | Foreground | Background | Ratio | Relevant threshold | Initial result |
 |---|---|---:|---:|---|
-| \`#ffffff\` | \`#ff9933\` | 2.13:1 | 4.5:1 normal text | Fail — selected volunteer chip text |
-| \`#ff9933\` | \`#ffffff\` | 2.13:1 | 3:1 non-text indicator | Below threshold — input focus candidate |
-| \`#ff9933\` | \`#f9f9f9\` | 2.02:1 | 3:1 non-text indicator | Below threshold — input focus candidate |
-| \`#693800\` | \`#ff9933\` | 4.55:1 | 4.5:1 normal text | Pass for this token pair only |
-| \`#8f4e00\` | \`#f9f9f9\` | 6.12:1 | 4.5:1 normal text | Pass for this token pair only |
-| \`#1a1c1c\` | \`#f9f9f9\` | 16.26:1 | 4.5:1 normal text | Pass for this token pair only |
-| \`#554336\` | \`#f9f9f9\` | 8.90:1 | 4.5:1 normal text | Pass for this token pair only |
+| `#ffffff` | `#ff9933` | 2.13:1 | 4.5:1 normal text | Fail — selected volunteer chip text |
+| `#ff9933` | `#ffffff` | 2.13:1 | 3:1 non-text indicator | Below threshold — input focus candidate |
+| `#ff9933` | `#f9f9f9` | 2.02:1 | 3:1 non-text indicator | Below threshold — input focus candidate |
+| `#693800` | `#ff9933` | 4.55:1 | 4.5:1 normal text | Pass for this token pair only |
+| `#8f4e00` | `#f9f9f9` | 6.12:1 | 4.5:1 normal text | Pass for this token pair only |
+| `#1a1c1c` | `#f9f9f9` | 16.26:1 | 4.5:1 normal text | Pass for this token pair only |
+| `#554336` | `#f9f9f9` | 8.90:1 | 4.5:1 normal text | Pass for this token pair only |
 
 A passing token pair does not prove that all text using those tokens passes in context. Opacity, overlays, gradients, images, hover/focus/selected states and actual font size/weight must be checked on rendered pages.
 
